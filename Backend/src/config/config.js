@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 if(!process.env.JWT_SECRET || !process.env.MONGODB){
-    console.error("Error with enviroment variables")
+    console.error("Error with environment variables")
 }
 
 const config = {
