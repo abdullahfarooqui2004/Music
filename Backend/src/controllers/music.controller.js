@@ -6,22 +6,7 @@ import albumModel from "../models/album.model.js"
 import { mongo } from "mongoose";
 
 export async function createMusic(req, res) {
-	const token = req.cookies.token;
-
-	if (!token) {
-		return res.status(401).json({
-			message: "Unauthorized",
-		});
-	}
-
 	try {
-		const decoded = jwt.verify(token, config.JWT);
-		if (decoded.role !== "artist") {
-			return res.status(409).json({
-				message: "Forbidden: Only Artists can create music",
-			});
-		}
-
 		const { title } = req.body;
 		const file = req.file;
 
@@ -42,7 +27,7 @@ export async function createMusic(req, res) {
 		const music = await musicModel.create({
 			uri: result.url,
 			title,
-			artist: decoded.id,
+			artist: req.user.id,
 		});
 
 		return res.status(201).json({
@@ -62,28 +47,13 @@ export async function createMusic(req, res) {
 
 
 export async function createAlbum(req, res){
-    const token = req.cookies.token;
-
-    if(!token){
-        return res.status(401).json({
-        message: "Unauthorized Access"
-        })
-    }
-
     try {
-        const decoded = jwt.verify(token, config.JWT);
-
-        if(decoded.role !== "artist"){
-            return res.status(401).json({
-                message: "Forbidden: Only Artists can create music"
-            })
-        }
 
         const {title, musics} = req.body;
         const album = await albumModel.create({
             title,
             musics,
-            artist: decoded.id,
+            artist: req.user.id,
         })
 
         return res.status(201).json({
@@ -101,4 +71,22 @@ export async function createAlbum(req, res){
             error: err
         })
     }
+}
+
+export async function getAllMusics(req, res){
+    const musics = await musicModel.find().populate("artist", "username email")
+
+    return res.status(200).json({
+        message: "All musics",
+        musics
+    })
+}
+
+export async function getAllAlbums(req, res){
+    const albums = await albumModel.find().populate("artist", "username email ").populate("musics")
+
+    return res.status(200).json({
+        message: "All albums",
+        albums
+    })
 }
