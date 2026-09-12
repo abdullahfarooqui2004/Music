@@ -15,7 +15,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api", authRouter);
-app.use("/api", musicRouter)
+app.use("/api/auth", authRouter);
+app.use("/api/music", musicRouter)
 
 export default app;

@@ -8,9 +8,11 @@ const upload = multer({
 });
 
 musicRouter.post(
-	"/music/upload",
+	"/upload",
 	upload.single("music"),
 	musicController.createMusic,
 );
+
+musicRouter.post("/create-album", musicController.createAlbum)
 
 export default musicRouter;

@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import musicModel from "../models/music.model.js";
 import uploadFile from "../services/storage.service.js";
+import albumModel from "../models/album.model.js"
+import { mongo } from "mongoose";
 
 export async function createMusic(req, res) {
 	const token = req.cookies.token;
@@ -56,4 +58,47 @@ export async function createMusic(req, res) {
 			error: err.message,
 		});
 	}
+}
+
+
+export async function createAlbum(req, res){
+    const token = req.cookies.token;
+
+    if(!token){
+        return res.status(401).json({
+        message: "Unauthorized Access"
+        })
+    }
+
+    try {
+        const decoded = jwt.verify(token, config.JWT);
+
+        if(decoded.role !== "artist"){
+            return res.status(401).json({
+                message: "Forbidden: Only Artists can create music"
+            })
+        }
+
+        const {title, musics} = req.body;
+        const album = await albumModel.create({
+            title,
+            musics,
+            artist: decoded.id,
+        })
+
+        return res.status(201).json({
+            message: "Album created successfully",
+            album: {
+                title: album.title,
+                artist: album.artist,
+                music: album.musics
+            }
+        })
+        
+    } catch (err) {
+        return res.status(401).json({
+            message: "Unauthorized",
+            error: err
+        })
+    }
 }
