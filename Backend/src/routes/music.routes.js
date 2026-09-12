@@ -30,4 +30,10 @@ musicRouter.get(
 	musicController.getAllAlbums,
 );
 
+musicRouter.get(
+	"/albums/:albumId",
+	authMiddleware.authUser,
+	musicController.getAlbumById,
+);
+
 export default musicRouter;

@@ -134,3 +134,10 @@ export async function login(req, res) {
 		});
 	}
 }
+
+export async function logout(req, res) {
+	res.clearCookie("token");
+	res.status(200).json({
+		message: "Logged Out",
+	});
+}

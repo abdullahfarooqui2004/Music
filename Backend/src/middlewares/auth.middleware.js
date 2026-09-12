@@ -47,7 +47,7 @@ export async function authUser(req, res, next) {
 
 		req.user = decoded;
 
-        next();
+		next();
 	} catch (error) {
 		return res.status(401).json({
 			message: "Unauthorized",

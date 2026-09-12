@@ -1,5 +1,5 @@
-import ImageKit from '@imagekit/nodejs'
-import config from '../config/config.js'
+import ImageKit from "@imagekit/nodejs";
+import config from "../config/config.js";
 
 const ImageKitClient = new ImageKit({
 	publicKey: config.IMAGEKIT_PUBLIC || process.env.IMAGEKIT_PUBLIC,
@@ -7,14 +7,14 @@ const ImageKitClient = new ImageKit({
 	urlEndpoint: config.IMAGEKIT_URI || process.env.IMAGEKIT_URI,
 });
 
-async function uploadFile(file){
-    const result = await ImageKitClient.files.upload({
-        file,
-        fileName: "music_"+Date.now(),
-        folder: "music"
-    })
+async function uploadFile(file) {
+	const result = await ImageKitClient.files.upload({
+		file,
+		fileName: "music_" + Date.now(),
+		folder: "music",
+	});
 
-    return result;
+	return result;
 }
 
-export default uploadFile
+export default uploadFile;
